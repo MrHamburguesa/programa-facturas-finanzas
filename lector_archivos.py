@@ -28,7 +28,7 @@ class LectorArchivos:
 
         columnas_a_cambiar = ['Monto Exento', 'Monto Neto', 'Monto IVA Recuperable', 'Monto Total']
 
-        nc_y_rechazadas = df.query('`Tipo Doc` == 61 or `Tipo Doc` == 56')
+        nc_y_rechazadas = df.query('`Tipo Doc` == 61 or `Tipo Doc` == 56').copy()
         nc_y_rechazadas[columnas_a_cambiar] = nc_y_rechazadas[columnas_a_cambiar] * -1
 
         tmp.loc[nc_y_rechazadas.index, columnas_a_cambiar] = nc_y_rechazadas[columnas_a_cambiar]
