@@ -77,4 +77,4 @@ class LectorArchivos:
 
 if __name__ == '__main__':
     objeto = LectorArchivos()
-    objeto.leer_todos_los_archivos_sii(False)
+    print(objeto.leer_todos_los_archivos_sii(False))
