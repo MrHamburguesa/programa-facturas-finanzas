@@ -12,17 +12,19 @@ RUTA_TURBO = 'crudos/base_de_datos_facturas/TURBO'
 RUTA_SCI = 'crudos/base_de_datos_facturas/SCI'
 RUTA_OBSERVACIONES = 'crudos/base_de_datos_facturas/OBSERVACIONES'
 
-BASE_FACTURAS = {'SII': [RUTA_SII, SII().leer_un_archivo_sii]}
+FACTURAS = {'SII': [RUTA_SII, SII().leer_un_archivo_sii]}
+ORDENDES_DE_COMPRA = {}
+ARTICULOS = {}
 
 
 class LectorArchivos:
     def __init__(self):
         pass
 
-    def leer_todas_las_bases(self, leer_anio_actual=False):
-        self.leer_tipo_de_archivo(leer_anio_actual)
-        self.leer_bases_de_datos_de_oc(leer_anio_actual)
-        self.leer_bases_de_datos_de_articulos(leer_anio_actual)
+    def leer_todas_los_tipos_de_archivos(self, leer_anio_actual=False):
+        facturas = self.leer_tipo_de_archivo(FACTURAS, leer_anio_actual)
+        ordenes_de_compra = self.leer_bases_de_datos_de_oc(ORDENDES_DE_COMPRA, leer_anio_actual)
+        articulos = self.leer_bases_de_datos_de_articulos(ARTICULOS, leer_anio_actual)
 
     def leer_tipo_de_archivo(self, diccionario_tipo_archivo, leer_anio_actual=False):
         diccionario_tipo_archivo = {}
