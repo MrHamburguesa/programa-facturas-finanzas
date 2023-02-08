@@ -5,6 +5,14 @@ class SII:
     def __init__(self):
         pass
 
+    def leer_un_archivo_sii(self, ruta_archivo):
+        df = pd.read_csv(ruta_archivo, delimiter=';', index_col=False)
+        df = df.rename(columns={'RUT Proveedor': 'RUT Emisor'})
+        df = self.convertir_montos_nc_y_rechazadas_a_negativos(df)
+        df = self.quitar_columnas_tabacos(df)
+
+        return df
+
     def convertir_montos_nc_y_rechazadas_a_negativos(self, df):
         tmp = df.copy()
 
@@ -28,10 +36,7 @@ class SII:
 
         return tmp
 
-    def leer_un_archivo_sii(self, ruta_archivo):
-        df = pd.read_csv(ruta_archivo, delimiter=';', index_col=False)
-        df = df.rename(columns={'RUT Proveedor': 'RUT Emisor'})
-        df = self.convertir_montos_nc_y_rechazadas_a_negativos(df)
-        df = self.quitar_columnas_tabacos(df)
 
-        return df
+class ACEPTA:
+    def __init__(self):
+        pass
