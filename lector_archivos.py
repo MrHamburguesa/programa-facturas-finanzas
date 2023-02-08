@@ -5,13 +5,16 @@ class LectorArchivos:
     def __init__(self):
         pass
 
-    def leer_bases_de_datos_de_facturas(self):
-        self.leer_sii()
-        self.leer_acepta()
-        self.leer_sigfe()
-        self.leer_turbo()
-        self.leer_sci()
-        self.leer_observaciones()
+    def leer_bases_de_datos_de_facturas(self, leer_anio_actual=False):
+        self.leer_sii(leer_anio_actual)
+        self.leer_acepta(leer_anio_actual)
+        self.leer_sigfe(leer_anio_actual)
+        self.leer_turbo(leer_anio_actual)
+        self.leer_sci(leer_anio_actual)
+        self.leer_observaciones(leer_anio_actual)
+    
+    def leer_sii(self, leer_anio_actual):
+        pass
 
     def filtrar_por_anio_actual(self, lista_archivos_contenidos):
         anio_actual = str(date.today().year)
@@ -26,9 +29,6 @@ class LectorArchivos:
 
         return lista_archivos_contenidos
 
-    def leer_sii(self):
-        pass
-
 if __name__ == '__main__':
     objeto = LectorArchivos()
-    print(objeto.obtener_archivos_contenidos_en_carpeta('crudos/base_de_datos_facturas/SII'))
+    print(objeto.obtener_archivos_contenidos_en_carpeta('crudos/base_de_datos_facturas/SII', True))
