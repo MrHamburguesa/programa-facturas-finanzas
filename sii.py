@@ -48,6 +48,55 @@ class ACEPTA:
         return df
 
 
+class SIGFEREPORTS:
+    def __init__(self):
+        pass
+
+    def leer_un_archivo_sigfe_reports(self, ruta_archivo):
+        df = pd.read_csv(ruta_archivo, delimiter=',', header=10)
+        df = df.dropna(subset=['Folio'])
+        df = df.query('`Cuenta Contable` != "Cuenta Contable"')
+        df['RUT Emisor'] = self.obtener_y_limpiar_rut(df['RUT Emisor'])
+
+        df = df.rename(columns={'Folio': 'Folio_interno', 'Número ': 'Folio'})
+        df = df.reset_index()
+        df['Fecha'] = pd.to_datetime(df['Fecha'], dayfirst=True)
+        df['Folio_interno'] = df['Folio_interno'].astype('Int32')
+
+    def obtener_y_limpiar_rut(self, serie_rut):
+        rut = serie_rut.str.split(' ')[0].copy()
+        rut = rut.str.replace('.', '', regex=False)
+        rut = rut.str.upper()
+        rut = rut.str.strip()
+
+        return rut
+
+    def obtener_devengo_pago_en_la_misma_fila(self, df_sigfe_reports):
+        tmp = df_sigfe_reports.copy()
+
+        haber = (tmp['Haber'] != "0")
+
+        tmp['Folio_interno DEVENGO'] = tmp[haber]['Folio_interno']
+        tmp['Fecha DEVENGO'] = tmp[haber]['Fecha']
+
+        debe = (tmp['Debe'] != "0")
+
+        tmp['Folio_interno PAGO'] = tmp[debe]['Folio_interno']
+        tmp['Fecha PAGO'] = tmp[debe]['Fecha']
+
+    def obtener_fecha_y_folio_devengo_o_pago(self, df_sigfe_reports, a_obtener):
+        tmp = df_sigfe_reports.copy()
+
+        traductor = {'Debe': 'DEVENGO', 'Haber': 'PAGO'}
+        columna_traducida = traductor[a_obtener]
+
+        filtro_obtenido = (tmp[a_obtener] != '0')
+        tmp[f'Folio_interno_{columna_traducida}'] = tmp[filtro_obtenido]['Folio_interno']
+        tmp[f'Fecha_{columna_traducida}'] = tmp[filtro_obtenido]['Fecha']
+
+        return tmp
+
+
 if __name__ == '__main__':
     objeto = ACEPTA()
     print(objeto.leer_un_archivo_acepta('crudos/base_de_datos_facturas/ACEPTA/ACEPTA 2017.xls'))
