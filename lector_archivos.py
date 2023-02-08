@@ -25,7 +25,12 @@ class LectorArchivos:
 
     def leer_un_archivo_sii(self, ruta_archivo):
         df = pd.read_csv(ruta_archivo, delimiter=';', index_col=False)
-        df = df.drop(columns=['Tabacos Puros', 'Tabacos Cigarrillos', 'Tabacos Elaborados'])
+
+        try:
+            df = df.drop(columns=['Tabacos Puros', 'Tabacos Cigarrillos', 'Tabacos Elaborados'])
+
+        except KeyError:
+            pass
 
         return df
 
@@ -54,4 +59,4 @@ if __name__ == '__main__':
     objeto = LectorArchivos()
     print(objeto.obtener_archivos_contenidos_en_carpeta('crudos/base_de_datos_facturas/SII', True))
     print(objeto.leer_un_archivo_sii(
-        'crudos/base_de_datos_facturas/SII/RCV_COMPRA_REGISTRO_61608402-K_202103.csv'))
+        'crudos/base_de_datos_facturas/SII/RCV_COMPRA_NO_INCLUIR_61608402-K_201808.csv'))
