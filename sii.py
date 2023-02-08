@@ -40,3 +40,14 @@ class SII:
 class ACEPTA:
     def __init__(self):
         pass
+
+    def leer_un_archivo_acepta(self, ruta_archivo):
+        df = pd.read_excel(ruta_archivo)
+        df = df.rename(columns={'emisor': 'RUT Emisor', 'folio': 'Folio'})
+
+        return df
+
+
+if __name__ == '__main__':
+    objeto = ACEPTA()
+    print(objeto.leer_un_archivo_acepta('crudos/base_de_datos_facturas/ACEPTA/ACEPTA 2017.xls'))
