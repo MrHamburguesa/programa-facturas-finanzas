@@ -1,6 +1,14 @@
 import os
 from datetime import date
 
+RUTA_SII = 'crudos/base_de_datos_facturas/SII'
+RUTA_ACEPTA = 'crudos/base_de_datos_facturas/ACEPTA'
+RUTA_SIGFE_REPORTS = 'crudos/base_de_datos_facturas/SIGFE'
+RUTA_TURBO = 'crudos/base_de_datos_facturas/TURBO'
+RUTA_SCI = 'crudos/base_de_datos_facturas/SCI'
+RUTA_OBSERVACIONES = 'crudos/base_de_datos_facturas/OBSERVACIONES'
+
+
 class LectorArchivos:
     def __init__(self):
         pass
@@ -12,8 +20,9 @@ class LectorArchivos:
         self.leer_turbo(leer_anio_actual)
         self.leer_sci(leer_anio_actual)
         self.leer_observaciones(leer_anio_actual)
-    
+
     def leer_sii(self, leer_anio_actual):
+        archivos = self.obtener_archivos_contenidos_en_carpeta()
         pass
 
     def filtrar_por_anio_actual(self, lista_archivos_contenidos):
@@ -28,6 +37,7 @@ class LectorArchivos:
             lista_archivos_contenidos = self.filtrar_por_anio_actual(lista_archivos_contenidos)
 
         return lista_archivos_contenidos
+
 
 if __name__ == '__main__':
     objeto = LectorArchivos()
