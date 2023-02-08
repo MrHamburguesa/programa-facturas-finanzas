@@ -23,14 +23,34 @@ class LectorArchivos:
         self.leer_sci(leer_anio_actual)
         self.leer_observaciones(leer_anio_actual)
 
-    def leer_un_archivo_sii(self, ruta_archivo):
-        df = pd.read_csv(ruta_archivo, delimiter=';', index_col=False)
+    def convertir_montos_nc_y_rechazadas_a_negativos(self, df):
+        tmp = df.copy()
+
+        columnas_a_cambiar = ['Monto Exento', 'Monto Neto', 'Monto IVA Recuperable', 'Monto Total']
+
+        nc_y_rechazadas = df.query('`Tipo Doc` == 61 or `Tipo Doc` == 56')
+        nc_y_rechazadas[columnas_a_cambiar] = nc_y_rechazadas[columnas_a_cambiar] * -1
+
+        tmp.loc[nc_y_rechazadas.index, columnas_a_cambiar] = nc_y_rechazadas[columnas_a_cambiar]
+
+        return tmp
+
+    def quitar_columnas_tabacos(self, df):
+        tmp = df.copy()
 
         try:
-            df = df.drop(columns=['Tabacos Puros', 'Tabacos Cigarrillos', 'Tabacos Elaborados'])
+            tmp = tmp.drop(columns=['Tabacos Puros', 'Tabacos Cigarrillos', 'Tabacos Elaborados'])
 
         except KeyError:
             pass
+
+        return tmp
+
+    def leer_un_archivo_sii(self, ruta_archivo):
+        df = pd.read_csv(ruta_archivo, delimiter=';', index_col=False)
+        df = df.rename(columns={'RUT Proveedor': 'RUT Emisor'})
+        df = self.convertir_montos_nc_y_rechazadas_a_negativos(df)
+        df = self.quitar_columnas_tabacos(df)
 
         return df
 
@@ -58,5 +78,6 @@ class LectorArchivos:
 if __name__ == '__main__':
     objeto = LectorArchivos()
     print(objeto.obtener_archivos_contenidos_en_carpeta('crudos/base_de_datos_facturas/SII', True))
-    print(objeto.leer_un_archivo_sii(
-        'crudos/base_de_datos_facturas/SII/RCV_COMPRA_NO_INCLUIR_61608402-K_201808.csv'))
+    sii = objeto.leer_un_archivo_sii(
+        'crudos/base_de_datos_facturas/SII/RCV_COMPRA_REGISTRO_61608402_201810.csv')
+    sii.to_csv('prueba.csv', sep=';')
