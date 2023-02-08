@@ -20,18 +20,18 @@ class LectorArchivos:
         pass
 
     def leer_todas_las_bases(self, leer_anio_actual=False):
-        self.leer_bases_de_datos_de_facturas(leer_anio_actual)
+        self.leer_tipo_de_archivo(leer_anio_actual)
         self.leer_bases_de_datos_de_oc(leer_anio_actual)
         self.leer_bases_de_datos_de_articulos(leer_anio_actual)
 
-    def leer_bases_de_datos_de_facturas(self, leer_anio_actual=False):
-        diccionario_bases = {}
-        for base_de_datos, datos_lectura in BASE_FACTURAS.items():
+    def leer_tipo_de_archivo(self, diccionario_tipo_archivo, leer_anio_actual=False):
+        diccionario_tipo_archivo = {}
+        for base_de_datos, datos_lectura in diccionario_tipo_archivo.items():
             ruta_de_base, funcion_lectora = datos_lectura[0], datos_lectura[1]
             df_completo_base = self.concatenar_dfs(ruta_de_base, funcion_lectora, leer_anio_actual)
-            diccionario_bases[base_de_datos] = df_completo_base
+            diccionario_tipo_archivo[base_de_datos] = df_completo_base
 
-        return diccionario_bases
+        return diccionario_tipo_archivo
 
     def leer_todos_los_archivos_sii(self, leer_anio_actual):
         archivos = self.obtener_archivos_contenidos_en_carpeta(RUTA_SII, leer_anio_actual)
@@ -62,4 +62,4 @@ class LectorArchivos:
 
 if __name__ == '__main__':
     objeto = LectorArchivos()
-    df = objeto.leer_bases_de_datos_de_facturas(False)
+    df = objeto.leer_tipo_de_archivo(False)
