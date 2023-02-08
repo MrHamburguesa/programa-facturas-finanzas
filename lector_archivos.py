@@ -56,10 +56,8 @@ class LectorArchivos:
 
     def leer_todos_los_archivos_sii(self, leer_anio_actual):
         archivos = self.obtener_archivos_contenidos_en_carpeta(RUTA_SII, leer_anio_actual)
-
-        dfs = map(lambda x: pd.read_csv(x, delimiter=';', index_col=False), archivos)
-
-        pass
+        dfs = pd.concat(map(lambda x: self.leer_un_archivo_sii(x), archivos))
+        return dfs
 
     def filtrar_por_anio_actual(self, lista_archivos_contenidos):
         anio_actual = str(date.today().year)
@@ -68,6 +66,8 @@ class LectorArchivos:
 
     def obtener_archivos_contenidos_en_carpeta(self, carpeta_a_leer, filtro_anio=False):
         lista_archivos_contenidos = os.listdir(carpeta_a_leer)
+        lista_archivos_contenidos = list(
+            map(lambda x: f'{carpeta_a_leer}/{x}', lista_archivos_contenidos))
 
         if filtro_anio:
             lista_archivos_contenidos = self.filtrar_por_anio_actual(lista_archivos_contenidos)
@@ -77,7 +77,4 @@ class LectorArchivos:
 
 if __name__ == '__main__':
     objeto = LectorArchivos()
-    print(objeto.obtener_archivos_contenidos_en_carpeta('crudos/base_de_datos_facturas/SII', True))
-    sii = objeto.leer_un_archivo_sii(
-        'crudos/base_de_datos_facturas/SII/RCV_COMPRA_REGISTRO_61608402_201810.csv')
-    sii.to_csv('prueba.csv', sep=';')
+    objeto.leer_todos_los_archivos_sii(False)
