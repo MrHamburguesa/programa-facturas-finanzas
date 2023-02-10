@@ -56,7 +56,7 @@ class SIGFEREPORTS:
         df = pd.read_csv(ruta_archivo, delimiter=',', header=10)
         df = df.dropna(subset=['Folio'])
         df = df.query('`Cuenta Contable` != "Cuenta Contable"')
-        df['RUT Emisor'] = self.obtener_y_limpiar_rut(df['RUT Emisor'])
+        df['RUT Emisor'] = self.obtener_y_limpiar_rut(df['Principal'])
 
         df = df.rename(columns={'Folio': 'Folio_interno', 'Número ': 'Folio'})
         df = df.reset_index()
@@ -98,5 +98,5 @@ class SIGFEREPORTS:
 
 
 if __name__ == '__main__':
-    objeto = ACEPTA()
-    print(objeto.leer_un_archivo_acepta('crudos/base_de_datos_facturas/ACEPTA/ACEPTA 2017.xls'))
+    objeto = SIGFEREPORTS()
+    print(objeto.leer_un_archivo_sigfe_reports('crudos/base_de_datos_facturas/SIGFE/SIGFE 2022.csv'))
