@@ -63,8 +63,12 @@ class SIGFEREPORTS:
         df['Fecha'] = pd.to_datetime(df['Fecha'], dayfirst=True)
         df['Folio_interno'] = df['Folio_interno'].astype('Int32')
 
+        devengo_pago_misma_fila = self.obtener_devengo_pago_en_la_misma_fila(df)
+
+        return devengo_pago_misma_fila
+
     def obtener_y_limpiar_rut(self, serie_rut):
-        rut = serie_rut.str.split(' ')[0].copy()
+        rut = serie_rut.str.split(' ').str[0]
         rut = rut.str.replace('.', '', regex=False)
         rut = rut.str.upper()
         rut = rut.str.strip()
@@ -84,6 +88,16 @@ class SIGFEREPORTS:
         tmp['Folio_interno PAGO'] = tmp[debe]['Folio_interno']
         tmp['Fecha PAGO'] = tmp[debe]['Fecha']
 
+        fecha_devengo = tmp.groupby(by=['RUT Emisor', 'Folio'])['Fecha DEVENGO'].min()
+        folio_devengo = tmp.groupby(by=['RUT Emisor', 'Folio'])['Folio_interno DEVENGO'].min()
+        fecha_pago = tmp.groupby(by=['RUT Emisor', 'Folio'])['Fecha PAGO'].min()
+        folio_pago = tmp.groupby(by=['RUT Emisor', 'Folio'])['Folio_interno PAGO'].min()
+
+        filas_unicas = pd.concat([fecha_devengo, folio_devengo, fecha_pago, folio_pago],
+                                 axis=1).reset_index()
+
+        return filas_unicas
+
     def obtener_fecha_y_folio_devengo_o_pago(self, df_sigfe_reports, a_obtener):
         tmp = df_sigfe_reports.copy()
 
@@ -99,4 +113,4 @@ class SIGFEREPORTS:
 
 if __name__ == '__main__':
     objeto = SIGFEREPORTS()
-    print(objeto.leer_un_archivo_sigfe_reports('crudos/base_de_datos_facturas/SIGFE/SIGFE 2022.csv'))
+    print(objeto.leer_un_archivo_sigfe_reports('crudos/base_de_datos_facturas/SIGFE/SIGFE 2023.csv'))
